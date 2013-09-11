@@ -103,12 +103,12 @@ public class StartDoclet extends Doclet{
 		{				
 			if (options[0].equals("-sourcepath") )
 			{
-				libfolder = options[1].replace( "/src", "" );
+				libfolder = options[1].replace( "src", "" );
 			}
 			
 			if ( options[0].equals("-docletpath") )
 			{
-				docletFolder = options[1].replace( "/prodoc.jar", "" );
+				docletFolder = options[1].replace( "prodoc.jar", "" );
 			}
 			
 			if ( options[0].equals( "-destdir" ) )
@@ -125,6 +125,7 @@ public class StartDoclet extends Doclet{
 		// look next to the jar
 		if ( !templateFolder.exists() )
 		{
+			System.out.println( "Looking for templates folder next to the doclet folder: " + docletFolder );
 			templateFolder = new File(docletFolder,"templates");
 		}
 		
@@ -141,6 +142,8 @@ public class StartDoclet extends Doclet{
 				System.out.println( "Couldn't get a rootURL to search for standard templates." );
 			}
 		}
+		
+		System.out.println( "Final template folder is: " + templateFolder.toString() );
 		
 		//get the docfolder and copies the ressource files from the templatefolder 
 		docFolder = new File(libfolder,outputFolder);

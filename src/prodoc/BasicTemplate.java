@@ -118,7 +118,7 @@ public abstract class BasicTemplate{
 	}
 
 	/**
-	 * Reads the example file speccified by the example tag of a doc member 
+	 * Reads the example file specified by the example tag of a doc member 
 	 * and adds it to the example section of the doc
 	 * @param doc
 	 * @throws IOException
@@ -140,6 +140,8 @@ public abstract class BasicTemplate{
 					exampleBuffer.append((char) c);
 				}
 			}
+			
+			in.close();
 
 			String exampleString = exampleBuffer.toString();
 			

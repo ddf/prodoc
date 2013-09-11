@@ -33,6 +33,8 @@ public class HTML_Template{
 		while ((c = in.read()) != -1){
 			templateBuffer.append((char) c);
 		}
+		
+		in.close();
 
 		String templateString = templateBuffer.toString();
 		if (templateString.indexOf("startCell") == (-1)){
