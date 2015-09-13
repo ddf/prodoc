@@ -68,7 +68,7 @@ public class ProcessingDoclet{
 	
 	// returns true if oldDocName != docName
 	// meaning this is the first time we've processed a method with this name
-	private boolean generateDoc(Doc doc,String className) throws IOException{
+	private boolean generateDoc(ClassDoc classDoc, Doc doc,String className) throws IOException{
 		docName = doc.name();
 		boolean newName = !oldDocName.equals( docName );
 		if( newName )
@@ -85,6 +85,7 @@ public class ProcessingDoclet{
 			memberTemplate.addSyntax(doc);
 			memberTemplate.addParameters(doc);
 			memberTemplate.setReturnSection(doc);
+			memberTemplate.setClass(classDoc);
 			memberTemplate.setUsage(doc);
 			memberTemplate.addRelatedmember(doc,fieldLinks,methodLinks);
 			memberTemplate.setFileName(doc,className);
@@ -136,7 +137,7 @@ public class ProcessingDoclet{
 	private void insertFields(ClassDoc classDoc,String className) throws IOException{
 		for(FieldDoc fieldDoc:classDoc.fields()){
 			if(fieldDoc.isPublic() && fieldDoc.tags("@invisible").length == 0 && fieldDoc.tags("@deprecated").length == 0){
-				generateDoc(fieldDoc,className);
+				generateDoc(classDoc, fieldDoc,className);
 				classTemplate.addField(fieldDoc);
 				indexTemplate.addMember(fieldDoc,className,fieldDoc.name());
 			}
@@ -153,7 +154,7 @@ public class ProcessingDoclet{
 		{
 			if(methodDoc.isPublic() && methodDoc.tags("@invisible").length == 0 && methodDoc.tags("@deprecated").length == 0)
 			{
-				if ( generateDoc(methodDoc,className) )
+				if ( generateDoc(classDoc, methodDoc,className) )
 				{
 					classTemplate.addMethod(methodDoc);
 					indexTemplate.addMember(methodDoc,className,methodDoc.name()+" ( )");
@@ -169,7 +170,7 @@ public class ProcessingDoclet{
 
 	void generateMember(ClassDoc classDoc) throws IOException {
 		String className = classDoc.name();
-		indexTemplate.addClass(className);
+		indexTemplate.addClass(classDoc, className);
 		indexTemplate.addMember(classDoc,className,classDoc.name());
 		classTemplate.setTitle(libName + " : : " + className);
 		classTemplate.setName(className);

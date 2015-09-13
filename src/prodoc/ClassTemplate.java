@@ -122,7 +122,6 @@ public class ClassTemplate extends BasicTemplate{
 		}else{
 			FIELD_DESCRIPTION_TAG.setContent(doc.commentText());
 		}
-		FIELD_DESCRIPTION_TAG.addContent("<BR><BR>");
 		classField.insertTagContent(FIELD_DESCRIPTION_TAG);		
 		if(!doc.commentText().equals("")){
 			fields.put(doc.name(),classField.getTemplateContent());
@@ -140,7 +139,6 @@ public class ClassTemplate extends BasicTemplate{
 		}else{
 			METHOD_DESCRIPTION_TAG.setContent(doc.commentText());
 		}
-		METHOD_DESCRIPTION_TAG.addContent("<BR><BR>");
 		classMethod.insertTagContent(METHOD_DESCRIPTION_TAG);	
 		if(!doc.commentText().equals("")){
 			methods.put(doc.name(),classMethod.getTemplateContent());

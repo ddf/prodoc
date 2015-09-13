@@ -41,6 +41,7 @@ public abstract class BasicTemplate{
 	final TemplateTag RELATED_TAG = new TemplateTag("@related",true);
 	final TemplateTag RETURN_TAG = new TemplateTag("@return",true);
 	final TemplateTag MEMBER_RETURN_TAG = new TemplateTag("@return",true);
+	final TemplateTag MEMBER_CLASS_TAG = new TemplateTag("@class",false);
 	final TemplateTag LINKS_TAG = new TemplateTag("@links",true);
 	final TemplateTag FIELDS_TAG = new TemplateTag("@fields",false);
 	final TemplateTag METHODS_TAG = new TemplateTag("@methods",false);

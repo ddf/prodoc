@@ -30,6 +30,7 @@ public class MemberTemplate extends BasicTemplate{
 		result.add(SYNTAX_TAG);
 		result.add(PARAMETERS_TAG);
 		result.add(DESCRIPTION_TAG);
+		result.add(MEMBER_CLASS_TAG);
 		return result;
 	}
 	
@@ -44,7 +45,20 @@ public class MemberTemplate extends BasicTemplate{
 		fileTemplate.insertTagContent(RETURN_TAG);
 		fileTemplate.insertTagContent(USAGE_TAG);
 		fileTemplate.insertTagContent(RELATED_TAG);
+		fileTemplate.insertTagContent(MEMBER_CLASS_TAG);
 		return fileTemplate.getTemplateContent();
+	}
+	
+	void setClass(Doc doc)
+	{
+		String link = buildFileName(doc, doc.name());
+		StringBuffer buffer = new StringBuffer();
+		buffer.append("<A href=\"");
+		buffer.append(link);
+		buffer.append(".html\">");
+		buffer.append(doc.name());
+		buffer.append("</A>");
+		MEMBER_CLASS_TAG.setContent(buffer.toString());
 	}
 
 	/**

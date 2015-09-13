@@ -68,7 +68,7 @@ public class IndexTemplate extends BasicTemplate{
 		methods = new LinkedHashMap<String,String>();
 	}
 	
-	void addClass(String className){
+	void addClass(Doc doc, String className){
 		StringBuffer linkBuffer = new StringBuffer();
 		if(firstClass){
 			firstClass = false;
@@ -76,9 +76,11 @@ public class IndexTemplate extends BasicTemplate{
 			linkBuffer.append("<BR>");
 			setLinks();
 		}
+		linkBuffer.append("<a class=\"classLink\" href=\"");
+		linkBuffer.append(buildFileName(doc,className)+".html");
+		linkBuffer.append("\">");
 		linkBuffer.append(className);
-		linkBuffer.append("<BR>");
-		linkBuffer.append("<BR>");
+		linkBuffer.append("</a><br>");
 		LINKS_TAG.addContent(linkBuffer.toString());
 	}
 	
@@ -94,7 +96,7 @@ public class IndexTemplate extends BasicTemplate{
 		}else if(doc.isMethod()){
 			methods.put(doc.name(),linkBuffer.toString());
 		}else if(doc.isClass()){
-			LINKS_TAG.addContent(linkBuffer.toString());
+			// LINKS_TAG.addContent(linkBuffer.toString());
 		}
 		
 	}
