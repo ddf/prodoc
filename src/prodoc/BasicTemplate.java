@@ -1,5 +1,9 @@
 package prodoc;
 
+import static prodoc.StartDoclet.docFolder;
+import static prodoc.StartDoclet.exampleFolder;
+import static prodoc.StartDoclet.libName;
+
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
@@ -9,11 +13,11 @@ import java.util.List;
 
 import com.sun.javadoc.Doc;
 import com.sun.javadoc.ExecutableMemberDoc;
+import com.sun.javadoc.FieldDoc;
+import com.sun.javadoc.MethodDoc;
 import com.sun.javadoc.ParamTag;
 import com.sun.javadoc.Parameter;
 import com.sun.javadoc.Tag;
-
-import static prodoc.StartDoclet.*;
 
 
 public abstract class BasicTemplate{
@@ -171,16 +175,38 @@ public abstract class BasicTemplate{
 		if(doc.isConstructor() || doc.isMethod()){
 			StringBuffer syntaxBuffer = new StringBuffer();
 			for(Parameter parameter:((ExecutableMemberDoc) doc).parameters()){
-				syntaxBuffer.append(parameter.name());
+				syntaxBuffer.append(parameter.typeName() + " " + parameter.name());
 				syntaxBuffer.append(", ");
 			}
 			if(syntaxBuffer.length() > 2){
 				syntaxBuffer.delete(syntaxBuffer.length()-2,syntaxBuffer.length());
 			}
-
-			addSyntax(doc.name()+"("+syntaxBuffer.toString()+");");
-		}else if(doc.isField()){
-			addSyntax(doc.name()+";");
+			
+			String returnType = "";
+			
+			if ( doc.isMethod() )
+			{
+				MethodDoc methodDoc = (MethodDoc)doc;
+				returnType = methodDoc.returnType().toString();
+				int lastDot = returnType.lastIndexOf('.');
+				if ( lastDot != -1 )
+				{
+					returnType = returnType.substring(lastDot+1);
+				}
+				returnType += " ";
+			}
+			
+			if ( doc.isConstructor() )
+			{
+				addSyntax("<em>" + doc.commentText() + "</em>");
+			}
+			
+			addSyntax(returnType + doc.name() + "("+syntaxBuffer.toString()+")");
+		}
+		else if(doc.isField())
+		{
+			FieldDoc fieldDoc = (FieldDoc)doc;
+			addSyntax(fieldDoc.type().typeName() + " " + doc.name());
 		}
 	}
 
@@ -202,13 +228,19 @@ public abstract class BasicTemplate{
 	 * @param doc
 	 */
 	void addParameters(Doc doc){
-		if(doc.isConstructor() || doc.isMethod()){
-			boolean hasParams = false;
-			for(ParamTag paramTag:((ExecutableMemberDoc) doc).paramTags()){
-				hasParams = true;
-				addParameter(paramTag.parameterName(),paramTag.parameterComment());
+		if(doc.isConstructor() || doc.isMethod())
+		{	
+			ExecutableMemberDoc memberDoc = (ExecutableMemberDoc)doc;
+			
+			ParamTag[]  tags   = memberDoc.paramTags();
+			
+			for(int i = 0; i < tags.length; ++i)
+			{
+				addParameter(tags[i].parameterName(), tags[i].parameterComment());
 			}
-			if(hasParams){
+			
+			if(tags.length > 0)
+			{
 				memberParameters.insertTagContent(PARAMETER_TAG);
 				PARAMETERS_TAG.setContent(memberParameters.getTemplateContent());
 			}
