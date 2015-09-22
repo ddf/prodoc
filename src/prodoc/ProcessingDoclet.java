@@ -1,7 +1,12 @@
 package prodoc;
 
+import static prodoc.StartDoclet.libName;
+
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.function.Function;
 
 import com.sun.javadoc.ClassDoc;
 import com.sun.javadoc.ConstructorDoc;
@@ -10,8 +15,6 @@ import com.sun.javadoc.FieldDoc;
 import com.sun.javadoc.MethodDoc;
 import com.sun.javadoc.PackageDoc;
 import com.sun.javadoc.Tag;
-
-import static prodoc.StartDoclet.*;
 
 public class ProcessingDoclet{
 	/**
@@ -52,10 +55,19 @@ public class ProcessingDoclet{
 	
 	public void generate() throws IOException
 	{
-		
 		ClassDoc[] classes = packDoc.allClasses();
-		for (ClassDoc classDoc : classes){
-			if(classDoc.tags("@invisible").length == 0 && classDoc.tags("@deprecated").length == 0) {
+		
+		Arrays.sort(classes, Comparator.comparing(
+				new Function<ClassDoc,String>()
+				{
+					public String apply(ClassDoc t) { return t.name(); } 
+				})
+		);
+		
+		for (ClassDoc classDoc : classes)
+		{
+			if(classDoc.tags("@invisible").length == 0 && classDoc.tags("@deprecated").length == 0) 
+			{
 				generateMember(classDoc);
 			}
 		}
