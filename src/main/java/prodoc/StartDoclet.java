@@ -39,6 +39,12 @@ public class StartDoclet extends Doclet{
 	 */
 	public static boolean start(RootDoc root)
 	{	
+		if ( root.specifiedPackages().length == 0 )
+		{
+			System.err.println("RootDoc had no specified packages, aborting! (specified classes length is " + root.specifiedClasses().length + ")");
+			return false;
+		}
+		
 		setFolders(root);
 		
 		try
@@ -94,18 +100,13 @@ public class StartDoclet extends Doclet{
 			libName = packageDoc.name();
 		}
 		
-		String libfolder = "";
+		String libfolder = ".";
 		String docletFolder = "";
 		String outputFolder = "documentation";
 		
 		//get the sourcepath from the sourcepath option setup with javadoc call
 		for( String[] options : root.options() )
 		{				
-			if (options[0].equals("-sourcepath") )
-			{
-				libfolder = options[1].replace( "src", "" );
-			}
-			
 			if ( options[0].equals("-docletpath") )
 			{
 				docletFolder = options[1].replace( "prodoc.jar", "" );
@@ -113,11 +114,11 @@ public class StartDoclet extends Doclet{
 			
 			if ( options[0].equals( "-destdir" ) )
 			{
-				outputFolder +=  "/" + options[1];
+				outputFolder = options[1];
 			}
 		}
 		
-		libFolder = new File(libfolder + "/src");
+		libFolder = new File(libfolder);
 		
 		//gets the templatefolder from the library or takes the standard templates if there is non available
 		templateFolder = new File(libfolder,"templates");
@@ -146,12 +147,14 @@ public class StartDoclet extends Doclet{
 		System.out.println( "Final template folder is: " + templateFolder.toString() );
 		
 		//get the docfolder and copies the ressource files from the templatefolder 
-		docFolder = new File(libfolder,outputFolder);
+		docFolder = new File(outputFolder);
 		
 		if (!docFolder.exists())
 		{
 			docFolder.mkdir();
 		}
+		
+		System.out.println("Output folder is " + docFolder.toString());
 				
 		try
 		{
@@ -185,6 +188,7 @@ public class StartDoclet extends Doclet{
 	
 	
 	private static void copy(File src, File dest) throws IOException{
+		System.out.println("Copying " + src.toString() + " to " + dest.toString());
 		copy(new FileInputStream(src), new FileOutputStream(dest));
 	}
 
